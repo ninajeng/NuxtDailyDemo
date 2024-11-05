@@ -130,18 +130,18 @@ npx nuxi add <TEMPLATE> <NAME>
 
 ### 使用自定義的頁面
 
-> step 1：使用 `npx nuxi add page` 指令新增頁面
+step 1： `npx nuxi add page` 指令新增頁面  
+ 會產生放置頁面路由的 pages 資料夾
 
-- 會產生放置頁面路由的 pages 資料夾
-  > step 2：更換 app.vue 的 `<NuxtWelcome />` 元件
-- 替換成 `<NuxtPage />` 顯示 pages 資料夾新增的頁面
+step 2：更換 app.vue 的 `<NuxtWelcome />` 元件  
+替換成 `<NuxtPage />` 顯示 pages 資料夾新增的頁面
 
 <br/>
 
 ### 引入 useRoute
 
-- useRoute 是一個 global 的 composable
-- 使用 useRoute 可以取得網址相關參數
+useRoute 是一個 global 的 composable  
+使用 useRoute 可以取得網址相關參數
 
 ```
 const route = useRoute();
