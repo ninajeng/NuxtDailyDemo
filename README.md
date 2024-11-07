@@ -330,4 +330,77 @@ h1 {
 
 在 Nuxt3 引入 Bootstrap5，並設置全域共用樣式
 
-<br>
+<br/>
+
+# Day 3 - 使用指令建立 Layouts
+
+## 共用內容
+
+app.vue 作為 Nuxt3 預設的進入點，網站有共用內容的時候可以放在 app.vue ，例如 : 頁首與頁尾
+
+```html
+<!-- app.vue -->
+<template>
+  <header>頁首</header>
+  <NuxtPage />
+  <footer>頁尾</footer>
+</template>
+```
+
+在全部的頁面都會呈現相同的內容。如果在部分頁面希望指定不同的頁首與頁尾的情況，就需要改成使用 Nuxt3 的模板功能。
+
+## 預設 Layout
+
+Nuxt3 預設會將 default.vue 作為預設的模板。當頁面元件與 <NuxtLayout> 沒有特別指定模板，將會使用 default.vue 作為預設的 Layout 。
+
+step 1：使用 `npx nuxi add layout default` 指令建立預設模板。  
+default.vue 內的 `<slot />` 插槽用途為顯示頁面的內容。
+
+```html
+<!-- layouts/default.vue -->
+<template>
+  <header>預設模板的表頭</header>
+  <slot />
+  <footer>預設模板的表尾</footer>
+</template>
+```
+
+step 2：在 app.vue 加入 `<NuxtLayout>` 元件來啟用模板。
+
+```html
+<!-- app.vue -->
+<template>
+  <h1>最外層的 App.vue</h1>
+  <NuxtLayout>
+    <NuxtPage />
+  </NuxtLayout>
+</template>
+```
+
+## 具名 Layout
+
+除了預設模板以外，還可以新增多個模板，以建立 admin 模板為例 :
+
+### 新增具名 Layout
+
+使用 `npx nuxi add layout admin` 指令建立 another 模板。
+
+```html
+<!-- layouts/another.vue -->
+<template>
+  <header>admin 模板的表頭</header>
+  <slot />
+  <footer>admin 模板的表尾</footer>
+</template>
+```
+
+### 在頁面指定使用具名 Layout
+
+step 1：建立頁面。 以 order 頁面為例，可以使用 `npx nuxi add page order` 指令來建立頁面，或是手動建立 pages/order.vue 檔案
+
+### 練習
+
+使用 Nuxt3 Layout 功能拆分前台與後台的頁首頁尾區塊
+
+- 前台 index.vue 與 about.vue 頁面皆使用 default.vue 模板 ( 預設 Layout ）
+- 後台 admin/index.vue 與 admin/order.vue 頁面皆使用 admin.vue 模板 ( 具名 Layout )
