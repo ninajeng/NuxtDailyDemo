@@ -13,6 +13,9 @@
           <li class="nav-item">
             <NuxtLink to="/about" class="nav-link">前台 about</NuxtLink>
           </li>
+          <li class="nav-item">
+            <NuxtLink to="/products" class="nav-link">前台 products</NuxtLink>
+          </li>
           <li class="nav-item ms-auto">
             <NuxtLink to="/admin" class="nav-link">後台首頁</NuxtLink>
           </li>

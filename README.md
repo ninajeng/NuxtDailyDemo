@@ -404,3 +404,110 @@ step 1：建立頁面。 以 order 頁面為例，可以使用 `npx nuxi add pag
 
 - 前台 index.vue 與 about.vue 頁面皆使用 default.vue 模板 ( 預設 Layout ）
 - 後台 admin/index.vue 與 admin/order.vue 頁面皆使用 admin.vue 模板 ( 具名 Layout )
+
+<br/>
+
+# Day 4 - 使用指令建立元件
+
+## 建立元件
+
+可以使用 `npx nuxi add component 元件名稱` 指令建立元件。  
+在檔案目錄中會新建立放置元件的 components 資料夾。
+
+## 使用元件
+
+在 Vite 、 Vue CLI 與 Nuxt2 ，都必須要使用 import 匯入元件
+
+```html
+<script setup>
+  import Card from "@/components/Card.vue";
+</script>
+
+<template>
+  <h1>首頁</h1>
+  <Card />
+</template>
+```
+Nuxt3 提供了 **Auto Imports**  功能  
+放在 components  資料夾內的元件都可以直接在 `<template></template>` 載入，不再需要使用 import 語法，可以直接在任何元件、頁面使用元件的名稱。
+
+```html
+<template>
+  <h1>首頁</h1>
+  <Card />
+</template>
+```
+在 Nuxt3 也可以不使用 **Auto Imports**  功能載入元件，使用 import 語法也是可以的
+```html
+<script setup>
+  import Card from '@/components/Card.vue';
+  // import { Card } from '#components'; 
+
+  // Nuxt3  Direct Imports 語法
+  // https://nuxt.com/docs/guide/directory-structure/components#direct-imports
+</script>
+
+<template>
+  <h1>首頁</h1>
+  <Card />
+</template>
+```
+
+## 使用資料夾管理元件
+
+若想要將頁面中的區塊拆分成元件進行管理，可以在 components  資料夾中建立**對應的頁面資料夾**來管理元件。  
+使用資料夾管理元件，將元件自動載入需要在元件加入資料夾的名稱 ( 大駝峰 ) 。  
+例如 `<HomeBanner />` 會從 components 資料夾中載入 home/banner.vue。
+
+### 再更細部拆分元件
+再更進一步，可以把元件內的內容拆分出來。  
+以 banner.vue 為例，.banner-title 、.banner-subtitle、.banner-button，可以拆分成：  
+- home/banner/Title.vue
+- home/banner/Subtitle.vue
+- home/banner/Button.vue
+- home/banner/index.vue  --- 進入點  
+
+在 index.vue **進入點**中，使用資料夾的路徑 ( 大駝峰 )  載入  `<HomeBannerTitle />`、`<HomeBannerSubTitle />`、`<HomeBannerButton />` 。
+
+## 關於 Auto Imports 功能
+
+Auto Imports 可以自動載入以下功能，不需明確地匯入 :  
+
+- 自己建立的元件 ( components/ 目錄 )。( [文件](https://nuxt.com/docs/guide/directory-structure/components) )
+- Nuxt3 內建的元件 ，例如 `<NuxtPage />` 。 ( [文件](https://nuxt.com/docs/api/components/nuxt-page) )
+- Vue Composables ( composables/  目錄 )。 ( [文件](https://vuejs.org/guide/reusability/composables) )
+- Nuxt3 內建的 Composables ，例如  **useFetch() 。** (  [文件](https://nuxt.com/docs/api/composables/use-fetch) )
+- 自己建立的工具函數 ( utils/ 目錄 )。  ( [文件](https://nuxt.com/docs/guide/directory-structure/utils) )
+- Vue API ( 例如 生命週期 Hook、 ref() 、reactive 、computed  …等 ) 。
+
+ components/ 、composables/、utils/  三個目錄是 Nuxt3 固定的目錄結構。關於 Auto Imports ，可以閱讀官方文件 : https://nuxt.com/docs/guide/concepts/auto-imports
+
+## **元件預設的 Auto Imports 設定**
+
+根據 [官方文件](https://nuxt.com/docs/api/nuxt-config#components)， **預設會掃描** "~/components/global" 與 "~/components" 資料夾，將 "~/components/global" 路徑下的元件**全域註冊**。而 "~/components" 路徑下的元件則會是區域註冊。
+
+```jsx
+default defineNuxtConfig({
+  components: {
+    dirs: [
+      {
+        path: "~/components/global",  
+        global: true,  // 全域註冊
+      },
+      "~/components",  // 區域註冊
+    ],
+  },
+});
+```
+
+若要禁用元件的 **Auto Imports** ，可以在 nuxt.config.ts 將 components.dirs 設定為空陣列 
+
+```jsx
+export default defineNuxtConfig({
+  components: {
+    dirs: []
+  }
+})
+```
+
+<br>
