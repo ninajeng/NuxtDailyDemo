@@ -484,7 +484,7 @@ Auto Imports 可以自動載入以下功能，不需明確地匯入 :
 
 ## **元件預設的 Auto Imports 設定**
 
-根據 [官方文件](https://nuxt.com/docs/api/nuxt-config#components)， **預設會掃描** "~/components/global" 與 "~/components" 資料夾，將 "~/components/global" 路徑下的元件**全域註冊**。而 "~/components" 路徑下的元件則會是區域註冊。
+根據 [官方文件](https://nuxt.com/docs/api/nuxt-config#components)， **預設會掃描** `~/components/global` 與 `~/components` 資料夾，將 `~/components/global` 路徑下的元件**全域註冊**。而 `~/components` 路徑下的元件則會是區域註冊。
 
 ```jsx
 default defineNuxtConfig({
@@ -510,4 +510,64 @@ export default defineNuxtConfig({
 })
 ```
 
-<br>
+### 練習
+建立卡片元件，並進行細部拆分。
+
+<br/>
+
+# Day 5 - 使用指令建立 Composables
+
+## 建立 Composables
+```
+npx nuxi add composable <composable-name>
+```
+在檔案目錄中會新建立放置組合函數的 composables 資料夾，例如輸入指令 `npx nuxi add composable useCounter` 會建立 composables/useCounter.ts  並生成預設格式
+
+## 在 composable 中使用 Vue API
+因為 Nuxt3 會自動導入 ( Auto Imports ) Vue API，所以使用 ref() 、 reactive() 、生命週期等功能就不需要另外導入，直接調用即可。
+```jsx
+// composables/useCounter.ts
+
+// import { ref } from 'vue';  <--- 因為有 Auto Imports ，所以不用 import ref 
+export function useCounter() {
+  const count = ref(0);
+
+  function increment() {
+    count.value++;
+  }
+
+  function decrement() {
+    count.value--;
+  }
+
+  return {
+    count,
+    increment,
+    decrement
+  };
+}
+```
+
+## 使用 Composables
+可以直接在 .js、.ts 和 .vue 中自動導入組合函數
+```jsx
+// index.vue
+<script setup>
+const { count, increment, decrement } = useCounter()
+</script>
+
+<template>
+  <p>{{ count }}</p>
+</template>
+```
+
+## 新增其他具有 Auto Imports 功能的 Composable
+可以在 nuxt.config.ts 加入 imports.dirs 屬性，填入資料夾名稱。原本 `~/composables` 和 `~/utils` 目錄預設的 Auto Imports 不會被覆寫
+```jsx
+export default defineNuxtConfig({
+  "imports": {
+     "dirs": ['stores']
+  }
+})
+```
+官方文件 : https://nuxt.com.cn/docs/api/nuxt-config#imports
