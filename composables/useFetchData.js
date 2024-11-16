@@ -1,4 +1,4 @@
-export const useFetch = (url) => {
+export const useFetchData = (url) => {
   const isLoading = ref(false);
   const data = ref([]);
 

@@ -1,8 +1,7 @@
 <script setup>
 const route = useRoute();
 
-const errorMessage = "發生錯誤，請稍後再試";
-const { isLoading, data:newsList, getData } = useFetch('https://nuxr3.zeabur.app/api/v1/home/news');
+const { isLoading, data:newsList, getData } = useFetchData('https://nuxr3.zeabur.app/api/v1/home/news');
 await getData();
 </script>
 
