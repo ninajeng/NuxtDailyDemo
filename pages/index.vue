@@ -1,7 +1,9 @@
 <script setup>
 const route = useRoute();
-const isLoading = ref(true);
-const fullPage = ref(false);
+
+const errorMessage = "發生錯誤，請稍後再試";
+const { isLoading, data:newsList, getData } = useFetch('https://nuxr3.zeabur.app/api/v1/home/news');
+await getData();
 </script>
 
 <template>
@@ -21,11 +23,18 @@ const fullPage = ref(false);
       <button type="button" class="btn btn-link">Link</button>
     </div>
   </div>
-  <div class="container position-relative">
-    <ClientOnly>
-      <VueLoading :isLoading="isLoading" :full-page="fullPage" />
-    </ClientOnly>
+  <div class="container">
     <h2>最新消息</h2>
+    <button type="button" class="btn btn-primary" @click="getData">refresh</button>
+    <ul style="list-style: none;" class="p-0 position-relative">
+      <ClientOnly>
+        <VueLoading :isLoading="isLoading" :full-page="false" />
+      </ClientOnly>
+      <li v-for="news in newsList" :key="news._id">
+        <NewsCard :_id="news._id" :title="news.title" :image="news.image" :description="news.description"
+          :createdAt="news.createdAt" :updatedAt="news.updatedAt" />
+      </li>
+    </ul>
   </div>
 </template>
 
