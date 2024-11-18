@@ -17,13 +17,15 @@
             <NuxtLink to="/products" class="nav-link">Products</NuxtLink>
           </li>
           <li class="nav-item">
-            <NuxtLink to="/rooms" class="nav-link">Rooms</NuxtLink>
+            <NuxtLink to="/room" class="nav-link">RoomList</NuxtLink>
           </li>
         </ul>
       </div>
     </div>
   </nav>
-  <slot />
+  <div class="container">
+    <slot />
+  </div>
   <footer class="p-3 bg-secondary bg-opacity-25">
     <h5>預設模板的表尾</h5>
     <NuxtLink to="/admin" class="nav-link">後台首頁</NuxtLink>

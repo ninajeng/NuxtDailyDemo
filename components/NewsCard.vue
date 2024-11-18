@@ -11,17 +11,21 @@ defineProps({
 
 <template>
   <div class="card">
-    <div class="card-image">
-      <img :src="image" :alt="title" />
-    </div>
-    <div class="card-body">
-      <h3 class="card-title">{{ title }}</h3>
-      <p class="card-description">
-        {{ description }}
-      </p>
-      <div class="card-timestamps">
-        <p><strong>Created At:</strong> {{ createdAt?.split("T")[0] }}</p>
-        <p><strong>Updated At:</strong> {{ updatedAt?.split("T")[0] }}</p>
+    <div class="row g-0">
+      <div class="col-md-4">
+        <img :src="image" :alt="title" class="img-fluid rounded-start" />
+      </div>
+      <div class="col-md-8">
+        <div class="card-body">
+          <h3 class="card-title">{{ title }}</h3>
+          <p class="card-description">
+            {{ description }}
+          </p>
+          <div class="card-timestamps">
+            <p><strong>Created At:</strong> {{ createdAt?.split("T")[0] }}</p>
+            <p><strong>Updated At:</strong> {{ updatedAt?.split("T")[0] }}</p>
+          </div>
+        </div>
       </div>
     </div>
   </div>

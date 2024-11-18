@@ -759,19 +759,109 @@ export default defineNuxtConfig({
 
 在 Day1 的題目練習中，我們有用指令在 pages 資料夾中新增 `index.vue` ，然後在 `app.vue` 以 `<NuxtPage />` 顯示新增的頁面。
 
-![image](https://hackmd.io/_uploads/Sklnuwhbkl.png)
-
 “在 pages 資料夾中新增 index.vue” 這一步其實就是在使用 Nuxt 提供的路由功能，透過 `pages/` 資料夾來為個每個頁面元件建立路由。並且在預設情境下，`pages/index.vue` 會對應到路由的 `/` 路徑。
 
 ### Nuxt pages 資料夾路由功能的特點
 
 在使用 pages 資料夾之後就不需要明確地在路由表定義路由物件格式與屬性，包括 `path` 、`component`、`name` 、`children` … 等。 嵌套式路由 ( 巢狀路由 ) 與動態路由也是一併使用資料夾管理，不需再額外寫路由表。
 
-`pages`資料夾定義的結構，經編譯會生成對應的的路由結構。例如下圖左側的資料夾結構，經編譯後會產生右側路由表的結構。
-![image](https://hackmd.io/_uploads/Hk6nOw2Wkx.png)
-
-<br>
+`pages`資料夾定義的結構，經編譯會生成對應的的路由結構。
 
 ### 練習
 
 新增頁面元件、設定 linkActiveClass
+
+<br/>
+
+# Day 7 - 嵌套式路由、 useRouter & useRoute
+
+## 嵌套式路由
+
+當頁面路由有多層級的頁面，例如一個主頁面下包含多個子頁面時，可以使用嵌套式路由在主要路由下建立多個子路由，以建立更直觀、清晰的 URL 結構。除此之外，若所有子頁面都有共用的區塊，可以在主頁面放入這些共用的元件，避免程式碼的重複。
+
+關於在 Nuxt3 使用嵌套式路由可以閱讀 [官方文件](https://nuxt.com/docs/guide/directory-structure/pages#nested-routes) 。
+
+### 資料夾結構
+
+以 `product` 路由為例，來實作嵌套式路由。資料夾結構為：
+
+```jsx
+pages/
+|-- product/
+|   |-- productA.vue
+|   |-- productB.vue
+|   |-- index.vue
+|
+|-- product.vue
+|-- index.vue
+```
+
+`pages/product.vue`
+
+- 作為主要的產品頁面，也作為嵌套路由的主容器。需要使用 `<NuxtPage />` 來顯示嵌套式路由頁面的內容，並加入 `<NuxtLink>` 元件提供導航連結。
+- 當切換到 `/product/productA` 或 `/product/productB` 時，對應的頁面內容將被渲染到 `<NuxtPage />` 元件所在的位置。
+- 在這一頁面的其他區塊，將作為所有子頁面共用的區塊，在切換到 `/product/productA` 或 `/product/productB` 時，共用的區塊也都會被渲染。
+
+`pages/product` 資料夾
+
+- 這個資料夾將用來放置產品頁面的子路由，例如產品內頁和產品列表頁。
+
+`pages/product/productA.vue` 與 `pages/product/productB.vue`
+
+- 作為要在產品頁面下實作的嵌套式路由。
+
+## 在 Nuxt3 使用路由方法與屬性
+
+Nuxt3 將 `vue-router` 的功能整合進 Composables，其運作行為與 `vue-router` 相同。因此在 `pages/` 資料夾**的**頁面元件中可以使用 Composition API 的路由寫法 `useRouter()` 與 `useRoute()` 來使用路由。
+
+### useRoute
+
+`useRoute` 用於取得目前路由的詳細資訊，包括路由參數、查詢參數、路由名稱等。以上方範例的 `pages/product/productA.vue` 為例，以下使用 `useRoute` 來獲取不同的路由資訊：
+
+```html
+<!-- pages/product/productA.vue -->
+<script setup>
+  // Auto Imports
+  const route = useRoute();
+
+  // 獲取路由中的查詢參數
+  // 例如 : 路由路徑為 /product/productA ， route.query 為空物件
+  // 例如 : 路由路徑為 /product/productA?q=產品名稱 ， route.query 為 { q:'產品名稱' }
+  console.log(route.query);
+
+  // 獲取包含路由路徑 ( path ) 、查詢參數 ( query ) 和 hash 的完整 URL
+  console.log(route.fullPath);
+
+  // 獲取路由的唯一名稱 ( name ) ，會以 pages 資料夾結構來命名，以 productA.vue 來說會是  product-productA
+  console.log(route.name);
+</script>
+
+<template>
+  <h2>產品內頁 productA</h2>
+</template>
+
+<style scoped></style>
+```
+
+其他關於 `useRoute` 屬性的內容可以閱讀 [Nuxt3 文件](https://nuxt.com/docs/api/composables/use-route) 以及 [vue-router 文件](https://router.vuejs.org/api/interfaces/RouteLocationNormalizedLoadedTyped.html#Properties)
+
+### useRouter
+
+`useRouter` 提供操作路由的方法，包括導航到不同的頁面、替換當前路由等。
+
+- `router.push('/product/productA')`  
+  在換頁的同時調用 history.pushState()，將 URL `/product/productA` 加入到瀏覽器的歷史紀錄中  
+  [history.pushState() 參考資料](https://developer.mozilla.org/en-US/docs/Web/API/History/pushState)
+
+- `router.replace('/product/productB')`  
+  在換頁的同時調用 history.replaceState()，將瀏覽器最後一筆的歷史紀錄修改成 `/product/productB`  
+  [history.replaceState() 參考資料](https://developer.mozilla.org/zh-CN/docs/Web/API/History/replaceState)
+
+- `router.go(1)`  
+  在換頁的同時調用 history.go()，根據傳入的參數在瀏覽器歷史紀錄中移動，傳入 -1 移動到前一頁， 1 則移動到下一頁
+
+其他關於 `useRouter` 屬性的內容可以閱讀 [Nuxt3 文件](https://nuxt.com/docs/api/composables/use-router) 以及 [vue-router 文件](https://router.vuejs.org/api/interfaces/Router.html#Methods)
+
+### 練習
+
+建立嵌套式路由，練習使用 useRouter 進行換頁、使用 useRoute 取得網頁資訊。
