@@ -970,3 +970,136 @@ Nuxt3 將 `vue-router` 的功能整合進 Composables，其運作行為與 `vue-
 ### 練習
 
 建立動態路由、404 錯誤頁面。
+
+<br/>
+
+# Day 9 - $fetch 與 ofetch
+
+Nuxt3 整合了 `ofetch` 套件，提供了全域的 `$fetch` 方法，讓我們可以在伺服器和客戶端進行非同步操作。
+
+## $fetch 使用方式
+
+Nuxt3 使用 [ofetch](https://github.com/unjs/ofetch) 建立全域的 $fetch 方法，並透過自動匯入 (Auto Imports) 的方式在每個 Vue 元件中可直接使用。因此，我們可以使用 ofetch 定義的屬性與方法格式來發出 API 請求 。
+
+### $fetch 帶入參數
+
+`$fetch` 方法可以接收多種參數來配置請求。以下針對經常使用的參數進行補充：
+
+```jsx
+await $fetch(url, {
+  method: "",
+  body: {},
+  baseURL: "",
+  query: {},
+  params: {}
+  headers: {},
+})
+```
+
+- url : API 請求的 URL。
+- method : HTTP 請求的方法，例如 `GET`、`POST`、`PUT`、`PATCH`、`DELETE` 。
+- body : 加入 HTTP 請求 body 的物件。ofetch 會自動將物件轉換為 `application/json`格式。
+- baseURL : 設定基本的 URL 路徑。在發送請求時，`baseURL` 會自動與 `url` 參數結合。
+- query: 查詢參數，以 `?` 的形式附加在 URL 的末尾，例如 `https://www.example.com?key=value`。
+- params: 路徑參數，這些參數會附加到 URL 路徑中。
+- headers: 設定請求的 HTTP 標頭，例如 `Content-Type` 或 `Authorization`。
+
+### **$fetch 帶入攔截器函式 （interceptors）**
+
+除了帶入參數以外，`$fetch` 還提供了攔截器功能，在請求發出前或收到回應後進行一些處理操作，以下是攔截器的用途：
+
+- **onRequest**: : 在發送請求之前執行，用於修改請求的設定，例如添加或修改請求的標頭 ( headers ) 。
+- **onRequestError**: 在請求發生錯誤時執行。可以來處理請求錯誤，例如發出錯誤提示訊息。
+- **onResponse**: 在接收到回應後執行，可以用來處理回傳的資料。
+- **onResponseError**: 當回應發生錯誤時執行，可以用來處理回應錯誤。例如處理伺服器回應的 HTTP 401 狀態碼，並將使用者重新導向至登入頁面。
+
+```jsx
+await $fetch("url", {
+ ...其他的參數
+ onRequest({ request, options }) {
+   // 舉例 : 設置 request headers
+   options.headers = options.headers || {};
+   options.headers.authorization = `Bearer token XXX`;
+ },
+ onRequestError({ request, options, error }) {
+   // 處理 request 錯誤
+ },
+ onResponse({ request, response, options }) {
+   // 處理回傳資料
+   return response._data;
+ },
+ onResponseError({ request, response, options }) {
+   // 處理 response 發生的錯誤
+   // 舉例：處理伺服器 HTTP 401 status
+    if (response && response.status === 401) {
+      console.error("未授權的訪問，請重新登入");
+      router.replace('/login');
+    }
+ },
+});
+```
+
+## $fetch 使用的注意事項
+
+在頁面加載或元件初始化時，使用 `$fetch` 進行資料請求（GET）需要注意 **重複發送請求** 的問題。  
+$fetch 會在伺服器端發送一次請求以進行伺服器端渲染（SSR），然後將請求的回應傳輸到客戶端。當客戶端收到回應後，會再發送一次相同的請求。
+
+### 避免重複發送請求的方法
+
+為了避免伺服器端與客戶端各請求一次 API，同時造成潛在的渲染問題。直接在頁面或是元件取得資料時，建議改成使用 [useFetch](https://nuxt.com.cn/docs/api/composables/use-fetch) 或是 [useAsyncData](https://nuxt.com.cn/docs/api/composables/use-async-data)  搭配 **`$fetch`** 來防止重複發送請求。
+
+```html
+<!-- /page/index.vue -->
+<script setup>
+  // 改法一.用 useFetch
+  const { data } = await useFetch("https://randomuser.me/api/");
+  const [result] = data.value.results;
+
+  // 改法二.用 useFetch 搭配 $fetch()
+  // const { data } = await useAsyncData("getRandomuser", () =>
+  //   $fetch("https://randomuser.me/api/")
+  // );
+  // const [result] = data.value.results;
+</script>
+<template>
+  <img
+    :src="result.picture?.large"
+    :alt="`${result.name.first} ${result.name?.last}`"
+  />
+  <h1>{{ result.name?.first }} {{ result.name?.last }}</h1>
+  <h3>Email: {{ result.email }}</h3>
+</template>
+```
+
+以上關於 `$fetch` 重複發送請求的特性可以閱讀 [官方文件](https://nuxt.com/docs/api/utils/dollarfetch) 的說明 。
+
+### 適合使用 $fetch 的情境
+
+如果確定請求是在客戶端由操作者在操作時觸發，例如透過點擊事件送出請求，不是在頁面或是元件初始化時取得資料，就可以使用 `$fetch`。例如下方範例，在按鈕點擊事件中使用 `$fetch`就不會發送兩次請求，導致渲染問題 :
+
+```html
+<!-- /page/index.vue -->
+<script setup>
+  const userData = ref({});
+
+  const getUserData = async () => {
+    const response = await $fetch("https://randomuser.me/api/");
+    userData.value = response.results[0];
+  };
+</script>
+
+<template>
+  <template v-if="userData.name">
+    <img
+      :src="userData.picture?.large"
+      :alt="`${userData.name?.first} ${userData.name?.last}`"
+    />
+    <h1>{{ userData.name?.first }} {{ userData.name?.last }}</h1>
+    <h3>Email: {{ userData.email }}</h3>
+  </template>
+
+  <button type="button" @click="getUserData">取得 User 資料</button>
+</template>
+```
+
+### 練習

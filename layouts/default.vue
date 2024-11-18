@@ -19,6 +19,9 @@
           <li class="nav-item">
             <NuxtLink to="/room" class="nav-link">RoomList</NuxtLink>
           </li>
+          <li class="nav-item">
+            <NuxtLink to="/register" class="nav-link">Register</NuxtLink>
+          </li>
         </ul>
       </div>
     </div>
