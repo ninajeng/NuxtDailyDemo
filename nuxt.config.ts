@@ -17,4 +17,10 @@ export default defineNuxtConfig({
   app: {
     baseURL: "/NuxtDailyDemo/",
   },
+  router: {
+    options: {
+      linkActiveClass: "active",
+      linkExactActiveClass: "active",
+    },
+  },
 });

@@ -9,19 +9,19 @@
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav w-100">
+        <ul class="navbar-nav">
           <li class="nav-item">
             <NuxtLink to="/admin/order" class="nav-link">後台訂單</NuxtLink>
-          </li>
-          <li class="nav-item ms-auto">
-            <NuxtLink to="/" class="nav-link">返回前台</NuxtLink>
           </li>
         </ul>
       </div>
     </div>
   </nav>
   <slot />
-  <footer class="p-3 bg-secondary bg-opacity-25 text-center">admin 模板的表尾</footer>
+  <footer class="p-3 bg-secondary bg-opacity-25">
+    <h5>admin 模板的表尾</h5>
+    <NuxtLink to="/" class="nav-link">返回前台</NuxtLink>
+  </footer>
 </template>
 
 <style scoped></style>

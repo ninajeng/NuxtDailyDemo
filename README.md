@@ -428,8 +428,9 @@ step 1：建立頁面。 以 order 頁面為例，可以使用 `npx nuxi add pag
   <Card />
 </template>
 ```
-Nuxt3 提供了 **Auto Imports**  功能  
-放在 components  資料夾內的元件都可以直接在 `<template></template>` 載入，不再需要使用 import 語法，可以直接在任何元件、頁面使用元件的名稱。
+
+Nuxt3 提供了 **Auto Imports** 功能  
+放在 components 資料夾內的元件都可以直接在 `<template></template>` 載入，不再需要使用 import 語法，可以直接在任何元件、頁面使用元件的名稱。
 
 ```html
 <template>
@@ -437,11 +438,13 @@ Nuxt3 提供了 **Auto Imports**  功能
   <Card />
 </template>
 ```
-在 Nuxt3 也可以不使用 **Auto Imports**  功能載入元件，使用 import 語法也是可以的
+
+在 Nuxt3 也可以不使用 **Auto Imports** 功能載入元件，使用 import 語法也是可以的
+
 ```html
 <script setup>
-  import Card from '@/components/Card.vue';
-  // import { Card } from '#components'; 
+  import Card from "@/components/Card.vue";
+  // import { Card } from '#components';
 
   // Nuxt3  Direct Imports 語法
   // https://nuxt.com/docs/guide/directory-structure/components#direct-imports
@@ -455,32 +458,34 @@ Nuxt3 提供了 **Auto Imports**  功能
 
 ## 使用資料夾管理元件
 
-若想要將頁面中的區塊拆分成元件進行管理，可以在 components  資料夾中建立**對應的頁面資料夾**來管理元件。  
+若想要將頁面中的區塊拆分成元件進行管理，可以在 components 資料夾中建立**對應的頁面資料夾**來管理元件。  
 使用資料夾管理元件，將元件自動載入需要在元件加入資料夾的名稱 ( 大駝峰 ) 。  
 例如 `<HomeBanner />` 會從 components 資料夾中載入 home/banner.vue。
 
 ### 再更細部拆分元件
+
 再更進一步，可以把元件內的內容拆分出來。  
-以 banner.vue 為例，.banner-title 、.banner-subtitle、.banner-button，可以拆分成：  
+以 banner.vue 為例，.banner-title 、.banner-subtitle、.banner-button，可以拆分成：
+
 - home/banner/Title.vue
 - home/banner/Subtitle.vue
 - home/banner/Button.vue
-- home/banner/index.vue  --- 進入點  
+- home/banner/index.vue --- 進入點
 
-在 index.vue **進入點**中，使用資料夾的路徑 ( 大駝峰 )  載入  `<HomeBannerTitle />`、`<HomeBannerSubTitle />`、`<HomeBannerButton />` 。
+在 index.vue **進入點**中，使用資料夾的路徑 ( 大駝峰 ) 載入 `<HomeBannerTitle />`、`<HomeBannerSubTitle />`、`<HomeBannerButton />` 。
 
 ## 關於 Auto Imports 功能
 
-Auto Imports 可以自動載入以下功能，不需明確地匯入 :  
+Auto Imports 可以自動載入以下功能，不需明確地匯入 :
 
 - 自己建立的元件 ( components/ 目錄 )。( [文件](https://nuxt.com/docs/guide/directory-structure/components) )
 - Nuxt3 內建的元件 ，例如 `<NuxtPage />` 。 ( [文件](https://nuxt.com/docs/api/components/nuxt-page) )
-- Vue Composables ( composables/  目錄 )。 ( [文件](https://vuejs.org/guide/reusability/composables) )
-- Nuxt3 內建的 Composables ，例如  **useFetch() 。** (  [文件](https://nuxt.com/docs/api/composables/use-fetch) )
-- 自己建立的工具函數 ( utils/ 目錄 )。  ( [文件](https://nuxt.com/docs/guide/directory-structure/utils) )
-- Vue API ( 例如 生命週期 Hook、 ref() 、reactive 、computed  …等 ) 。
+- Vue Composables ( composables/ 目錄 )。 ( [文件](https://vuejs.org/guide/reusability/composables) )
+- Nuxt3 內建的 Composables ，例如 **useFetch() 。** ( [文件](https://nuxt.com/docs/api/composables/use-fetch) )
+- 自己建立的工具函數 ( utils/ 目錄 )。 ( [文件](https://nuxt.com/docs/guide/directory-structure/utils) )
+- Vue API ( 例如 生命週期 Hook、 ref() 、reactive 、computed …等 ) 。
 
- components/ 、composables/、utils/  三個目錄是 Nuxt3 固定的目錄結構。關於 Auto Imports ，可以閱讀官方文件 : https://nuxt.com/docs/guide/concepts/auto-imports
+components/ 、composables/、utils/ 三個目錄是 Nuxt3 固定的目錄結構。關於 Auto Imports ，可以閱讀官方文件 : https://nuxt.com/docs/guide/concepts/auto-imports
 
 ## **元件預設的 Auto Imports 設定**
 
@@ -491,7 +496,7 @@ default defineNuxtConfig({
   components: {
     dirs: [
       {
-        path: "~/components/global",  
+        path: "~/components/global",
         global: true,  // 全域註冊
       },
       "~/components",  // 區域註冊
@@ -500,17 +505,18 @@ default defineNuxtConfig({
 });
 ```
 
-若要禁用元件的 **Auto Imports** ，可以在 nuxt.config.ts 將 components.dirs 設定為空陣列 
+若要禁用元件的 **Auto Imports** ，可以在 nuxt.config.ts 將 components.dirs 設定為空陣列
 
 ```jsx
 export default defineNuxtConfig({
   components: {
-    dirs: []
-  }
-})
+    dirs: [],
+  },
+});
 ```
 
 ### 練習
+
 建立卡片元件，並進行細部拆分。
 
 <br/>
@@ -518,17 +524,21 @@ export default defineNuxtConfig({
 # Day 5 - 使用指令建立 Composables
 
 ## 建立 Composables
+
 ```
 npx nuxi add composable <composable-name>
 ```
-在檔案目錄中會新建立放置組合函數的 composables 資料夾，例如輸入指令 `npx nuxi add composable useCounter` 會建立 composables/useCounter.ts  並生成預設格式
+
+在檔案目錄中會新建立放置組合函數的 composables 資料夾，例如輸入指令 `npx nuxi add composable useCounter` 會建立 composables/useCounter.ts 並生成預設格式
 
 ## 在 composable 中使用 Vue API
+
 因為 Nuxt3 會自動導入 ( Auto Imports ) Vue API，所以使用 ref() 、 reactive() 、生命週期等功能就不需要另外導入，直接調用即可。
+
 ```jsx
 // composables/useCounter.ts
 
-// import { ref } from 'vue';  <--- 因為有 Auto Imports ，所以不用 import ref 
+// import { ref } from 'vue';  <--- 因為有 Auto Imports ，所以不用 import ref
 export function useCounter() {
   const count = ref(0);
 
@@ -543,13 +553,15 @@ export function useCounter() {
   return {
     count,
     increment,
-    decrement
+    decrement,
   };
 }
 ```
 
 ## 使用 Composables
+
 可以直接在 .js、.ts 和 .vue 中自動導入組合函數
+
 ```jsx
 // index.vue
 <script setup>
@@ -562,12 +574,204 @@ const { count, increment, decrement } = useCounter()
 ```
 
 ## 新增其他具有 Auto Imports 功能的 Composable
+
 可以在 nuxt.config.ts 加入 imports.dirs 屬性，填入資料夾名稱。原本 `~/composables` 和 `~/utils` 目錄預設的 Auto Imports 不會被覆寫
+
 ```jsx
 export default defineNuxtConfig({
-  "imports": {
-     "dirs": ['stores']
-  }
-})
+  imports: {
+    dirs: ["stores"],
+  },
+});
 ```
+
 官方文件 : https://nuxt.com.cn/docs/api/nuxt-config#imports
+
+### 練習
+
+建立 composable，透過 AJAX 取得資料。
+
+<br/>
+
+# Day 6 - NuxtLink 與 路由基礎配置
+
+## NuxtLink
+
+在 Vite 與 Vue CLI 可以使用 `<RouterLink>` 建立導航至其他頁面的路由連結。
+
+```html
+<!-- app.vue -->
+<template>
+  <!-- 使用 RouterLink 導航至 首頁 頁面 ( 路徑 / ) -->
+  <!-- 編譯成 : <a href="/">首頁</a>-->
+  <RouterLink to="/">首頁</RouterLink>
+
+  <!-- 使用 RouterLink 導航至 關於 頁面  ( 路徑 /about ) -->
+  <!-- 編譯成 : <a href="/about">關於</a>-->
+  <RouterLink to="/about">關於</RouterLink>
+</template>
+```
+
+而在 Nuxt 則是會使用 `<NuxtLink>` 取代 `<RouterLink>` 元件實作頁面換頁的連結。
+
+```html
+<!-- app.vue -->
+<template>
+  <h2>NuxtLink 基礎用法</h2>
+  <ul class="list">
+    <li>
+      <!-- 使用 NuxtLink 導航至 首頁 頁面 ( 路徑 / ) -->
+      <!-- 編譯成 : <a href="/">首頁</a>-->
+      <NuxtLink to="/">首頁</NuxtLink>
+    </li>
+    <li>
+      <!-- 使用 NuxtLink 導航至 關於 頁面  ( 路徑 /about ) -->
+      <!-- 編譯成 : <a href="/about">關於</a>-->
+      <NuxtLink to="/about">關於</NuxtLink>
+    </li>
+  </ul>
+</template>
+```
+
+它繼承了 `<RouterLink>` 的所有屬性並提供了額外的功能，例如: `external` 、`target` 屬性 …等。除此之外，與 `<RouterLink>` 相同， `<NuxtLink>` 也會被編譯為 HTML a 標籤。
+
+以下將對 `<NuxtLink>` 的 `target` 與 `external` 屬性進行解說，其他屬性可以至 [官方文件](https://nuxt.com/docs/api/components/nuxt-link#nuxtlink) 查詢
+
+### 1 - target
+
+`target` 屬性用於控制連結點擊後的打開方式，其行為與值跟 HTML a 標籤的 [target 屬性](https://developer.mozilla.org/zh-TW/docs/Web/HTML/Element/a#target) 相同。
+
+允許的值 :
+
+- **`_self`**（預設）：在當前瀏覽器視窗打開連結。
+- **`_blank`**：在新頁籤打開連結。
+- **`_parent`**：在上一層父層視窗打開連結。
+- **`_top`**：在最頂層父層視窗打開連結。
+
+```html
+<!-- app.vue -->
+<template>
+  <ul class="list">
+    <li>
+      <!-- 使用 target 屬性打開新頁籤 -->
+      <NuxtLink to="/about" target="_blank"
+        >關於 ( 使用 <code>target="_blank"</code> )</NuxtLink
+      >
+    </li>
+  </ul>
+</template>
+```
+
+### 2 - external
+
+`external`會將 `<NuxtLink>` 識別為外部連結，強制渲染成 HTML a 標籤而不是 `<RouterLink>`。
+
+在設定 `external`屬性之後就不能再使用以下 “**繼承自 `<RouterLink>` 的所有屬性” 。這些屬性都依賴於 Vue Router** 管理狀態 ， **但** `<NuxtLink>` **加入** `external`之後會被 Vue Router 忽略，狀態會改由瀏覽器管理 ，不會由 **Vue Router 管理 :**
+
+- exactActiveClass
+- replace
+- ariaCurrentValue
+- activeClass
+
+```html
+<!-- app.vue -->
+<template>
+  <ul class="list">
+    <li>
+      <!-- 使用 external 屬性在 NuxtLink 中打開外部連結 -->
+      <NuxtLink to="https://www.google.com/" external
+        >google ( 外部連結 )</NuxtLink
+      >
+    </li>
+    <li>
+      <!-- 加入 external 之後 replace 、activeClass 會被忽略 -->
+      <NuxtLink
+        to="https://www.google.com/"
+        external
+        replace
+        activeClass="active"
+      >
+        google ( 外部連結；<code>replace </code>、<code>activeClass</code>
+        屬性失效)
+      </NuxtLink>
+    </li>
+  </ul>
+</template>
+
+<style scoped>
+  .active {
+    color: red;
+  }
+</style>
+```
+
+### 繼承自 RouterLink 的屬性
+
+使用 `<NuxtLink>` 時，如果不同時使用 external 屬性，所有繼承自 RouterLink 的屬性，都會與在 Vue Router 中的使用方式完全一致。例如 `to`、`replace`、`activeClass`…等。
+
+> When not using **`external`**, **`<NuxtLink>`** supports all Vue Router's [RouterLink props](https://router.vuejs.org/api/interfaces/RouterLinkProps.html) -取自 [官方文件](https://nuxt.com/docs/api/components/nuxt-link#routerlink)
+
+```html
+<!-- app.vue -->
+<template>
+  <!-- 使用 to 屬性指定導航路徑 -->
+  <NuxtLink to="/">首頁</NuxtLink>
+
+  <!-- 使用 replace 屬性，不在瀏覽器留下新的歷史紀錄 -->
+  <NuxtLink to="/about" replace>關於</NuxtLink>
+
+  <!-- 使用 activeClass 屬性設定與目前路由配對的 CSS 樣式 -->
+  <NuxtLink to="/contact" activeClass="active">聯絡</NuxtLink>
+</template>
+```
+
+### 修改 linkActiveClass 與 linkExactActiveClass 的預設值
+
+`<NuxtLink>` 的 `linkActiveClass`與 `linkExactActiveClass`屬性的運作與預設值和 Vue Router 相同，預設值分別為 '`router-link-active`’ 與 '`router-link-exact-active`’。
+
+如果希望自定義這些屬性並調整應用到連結上的 class 名稱，可以參照 Nuxt3 [Router Options](https://nuxt.com/docs/guide/recipes/custom-routing#router-options) 的方法在 `nuxt.config.ts` 中使用 `router.options` 來設定 `linkActiveClass` 及`linkExactActiveClass`。
+
+例如，如果希望路由 URL 與頁面連結相符時套用 `.active`class，可以進行以下設定
+
+```jsx
+// nuxt.config.ts
+export default defineNuxtConfig({
+  router: {
+    options: {
+      linkActiveClass: "active",
+      linkExactActiveClass: "active",
+    },
+  },
+});
+```
+
+這樣一來，當頁面渲染後，符合條件的連結的 `<a>` 標籤將會套用 `.active` class：
+
+```html
+<template>
+  <!-- 當 URL 為 /about 時，實際在網頁上的內容會渲染成: -->
+  <!-- <a href="/about" class="active">關於</a> -->
+  <NuxtLink to="/about">關於</NuxtLink>
+</template>
+```
+
+## 建立基礎路由結構
+
+在 Day1 的題目練習中，我們有用指令在 pages 資料夾中新增 `index.vue` ，然後在 `app.vue` 以 `<NuxtPage />` 顯示新增的頁面。
+
+![image](https://hackmd.io/_uploads/Sklnuwhbkl.png)
+
+“在 pages 資料夾中新增 index.vue” 這一步其實就是在使用 Nuxt 提供的路由功能，透過 `pages/` 資料夾來為個每個頁面元件建立路由。並且在預設情境下，`pages/index.vue` 會對應到路由的 `/` 路徑。
+
+### Nuxt pages 資料夾路由功能的特點
+
+在使用 pages 資料夾之後就不需要明確地在路由表定義路由物件格式與屬性，包括 `path` 、`component`、`name` 、`children` … 等。 嵌套式路由 ( 巢狀路由 ) 與動態路由也是一併使用資料夾管理，不需再額外寫路由表。
+
+`pages`資料夾定義的結構，經編譯會生成對應的的路由結構。例如下圖左側的資料夾結構，經編譯後會產生右側路由表的結構。
+![image](https://hackmd.io/_uploads/Hk6nOw2Wkx.png)
+
+<br>
+
+### 練習
+
+新增頁面元件、設定 linkActiveClass
