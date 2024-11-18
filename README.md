@@ -865,3 +865,108 @@ Nuxt3 將 `vue-router` 的功能整合進 Composables，其運作行為與 `vue-
 ### 練習
 
 建立嵌套式路由，練習使用 useRouter 進行換頁、使用 useRoute 取得網頁資訊。
+
+<br/>
+
+# Day 8 - 動態路由與 404 錯誤頁面處理
+
+## 動態路由
+
+在嵌套式路由的範例中，使用了靜態路由來處理 `productA.vue` 和 `productB.vue` 的結構，每個產品內頁都對應一個元件，如果這些元件中有大量程式碼重複，會導致代碼冗餘和維護困難。
+
+為了解決這個問題，可以改成使用**動態路由**。動態路由通過 URL 參數來控制頁面顯示，不需為每個產品建立元件。如此一來就只需要用一個共用的元件，根據 URL 參數變化來顯示對應的產品內容。
+
+### 建立方式
+
+1. 使用中括號 `[ ]` 來命名動態路由，並在中括號內填入動態路由的名稱。  
+   以 `/pages/product/productA.vue` 與 `/pages/product/productB.vue` 這兩支檔案為例，可以將它們合併為 `product/[id].vue` ，其中 `id` 為動態路由的名稱，後續取得動態路由的資訊將會使用到 `id` 這個名稱。
+
+2. 在 `product/[id].vue` 可以使用路由 `useRoute()` 方法的 `params` 屬性，以動態路由的名稱 `id` 取得動態的 URL 參數。  
+   例如進入 `/product/productA` 路徑可以在 `[id].vue` 中使用 `params.id` 來取得路由的 `productA` 字串。
+
+```html
+<!-- /pages/product/[id].vue -->
+
+<script setup>
+  // Auto Imports
+  const route = useRoute();
+
+  // 獲取路由中的動態參數
+  // 例如 : 路由路徑為 /product/productA ， route.params 為 { id: 'productA'}
+  // { id: 'productA'}
+  console.log(route.params);
+</script>
+
+<template>
+  <h2>產品內頁 {{ route.params.id }}</h2>
+</template>
+
+<style scoped></style>
+```
+
+## 404 錯誤頁面
+
+### 匹配所有層級的路由
+
+在 Nuxt3 中，`[...slug].vue` 用於匹配特定路徑下所有層級的路由。當 URL 沒有匹配到相對應的路由時，會被 [...slug].vue 捕捉。  
+以下方的路由結構為例，`/pages/product/[...slug].vue` 會匹配 `/product` 路徑下的所有路由。如果 URL 為 `/product/productA/info`，由於沒有匹配到對應的 .vue 檔案，因此會匹配到 `/pages/product/[...slug].vue`。
+
+```jsx
+/pages
+  ├── product
+  │   ├── [id].vue
+  │   ├── index.vue
+  │   └── [...slug].vue
+  ├── index.vue
+  └── product.vue
+```
+
+`/pages/product/[...slug].vue` 檔案內容如下。進入 `[...slug].vue` 之後，可以通過 `route.params` 獲取動態路由參數 `slug` 的值。`slug` 參數是一個陣列，表示路徑中的每一層。例如對於　`/product/productA/info` 路徑，`route.params.slug` 的值為 `[ "productA", "info" ]`。
+
+```html
+<!-- /pages/product/[...slug].vue -->
+<script setup>
+  const route = useRoute();
+</script>
+
+<template>
+  <p>匹配到的 Params:{{ route.params.slug }}</p>
+  <p>每個陣列元素對應一個層級</p>
+</template>
+```
+
+關於更多 `[...slug].vue` 的資訊可以閱讀官方文件 : [**Catch-all Route**](https://nuxt.com/docs/guide/directory-structure/pages#catch-all-route)
+
+### 建立 404 Not Found 頁面
+
+理解了 `[...slug].vue` 的作用後，我們可以利用它來實作全站的 404 頁面。只需在 `./pages` 目錄下建立 `[...slug].vue`，並使用 `setResponseStatus()` 設定 HTTP 404 狀態碼。這樣，所有未匹配到的路由請求都將由此頁面處理。
+
+```html
+<!-- /pages/[...slug].vue -->
+<script setup>
+  const route = useRoute();
+  const event = useRequestEvent(); // 獲取當前請求的事件
+
+  // 設定 HTTP 404 狀態碼
+  setResponseStatus(event, 404);
+</script>
+
+<template>
+  <h1>404 Not Found</h1>
+  <p>你所請求的頁面：{{ route.params.slug.join('/') }}，不存在。</p>
+</template>
+
+<style scoped>
+  h1 {
+    color: red;
+    text-align: center;
+  }
+  p {
+    text-align: center;
+  }
+</style>
+```
+
+### 練習
+
+建立動態路由、404 錯誤頁面。
